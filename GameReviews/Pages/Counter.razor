@@ -1,0 +1,27 @@
+﻿@page "/add"
+
+@inject HttpClient Http
+@inject NavigationManager navigationM
+
+<PageTitle>Dodaj gre</PageTitle>
+
+<h1>Dodaj gre</h1> 
+<hr />
+
+<EditForm OnValidSubmit="Submit" Model="game">
+    <p><label>Tytuł</label><InputText @bind-Value="@game.Title"></InputText></p>
+    <p><label>Producent</label><InputText @bind-Value="@game.Producer"></InputText></p>
+    <p><label>Opis</label><InputTextArea @bind-Value="@game.Description"></InputTextArea></p>
+    <p><label>Premiera</label><InputDate @bind-Value="@game.Premiere"></InputDate></p>
+    <p><label>Ocena</label><InputNumber @bind-Value="@game.Rating"></InputNumber></p>
+    <button type="submit" class="btn bg-primary">Wyślij</button>
+</EditForm>
+
+@code {
+    Game game = new Game();
+
+    private async Task Submit()
+    {
+        await Http.PostAsJsonAsync<Game>("games", game);
+    }
+}

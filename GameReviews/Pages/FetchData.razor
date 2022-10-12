@@ -1,0 +1,50 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+@inject NavigationManager navigationM
+
+<PageTitle>Lista gier</PageTitle>
+
+<h1>Lista gier</h1>
+
+@if (games == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tytuł</th>
+                <th>Ocena</th>
+                <th>Producent</th>
+                <th>Więcej</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in games)
+            {
+                <tr>
+                    <td>@game.Title</td>
+                    <td>@game.Rating</td>
+                    <td>@game.Producer</td>
+                    <td><button class="btn bg-info" @onclick="(() => GameDes(game.Id))">Więcej</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Game>? games;
+
+    protected override async Task OnInitializedAsync()
+    {
+        games = await Http.GetFromJsonAsync<List<Game>>("games");
+    }
+
+    protected void GameDes(int id)
+    {
+        navigationM.NavigateTo("game/" + id);
+    }
+}

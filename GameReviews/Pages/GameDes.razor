@@ -1,0 +1,54 @@
+﻿@page "/game/{id:int}"
+@inject HttpClient Http
+
+@if(game is null)
+{
+    <h2>Ładowanie</h2>
+}
+else
+{
+    <div class="info">
+                <h1>@game.Title</h1>
+                <div class="panel">
+                    <div class="pan">
+                        Ocena: @game.Rating
+                    </div>
+                    <div class="pan">
+                        Ocena Krytyków: @game.CriticsRating
+                    </div>
+                    <div class="pan">
+                        Data wydania: @game.Premiere.ToShortDateString()
+                    </div>
+                </div>
+                <div class="description">
+                    @game.Description
+                </div>
+            </div>
+            <div class="photo">
+
+            </div>
+                            <div class="comments">
+            @foreach(Comment item in game.Comments)
+            {
+                    <div class="comment">
+                        <div class="head">
+                            @item.Title
+                        </div>
+                        <div class="body">
+                            @item.Content
+                        </div>
+                    </div>
+            }
+                            </div>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    Game game;
+
+    protected override async Task OnInitializedAsync()
+    {
+        game = await Http.GetFromJsonAsync<Game>($"games/{id}");
+    }
+}
